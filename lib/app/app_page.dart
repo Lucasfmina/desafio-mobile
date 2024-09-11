@@ -1,12 +1,27 @@
 import 'package:aplicacao_base/app/pages/login/login_page.dart';
-import 'package:aplicacao_base/app/pages/videoPreview/video_preview_page.dart';
+import '../../shared/themes/theme.dart';
+import '../../shared/themes/util.dart';
 import 'package:flutter/material.dart';
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: VideoPreviewPage());
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+
+    // Retrieves the default theme for the platform
+    //TextTheme textTheme = Theme.of(context).textTheme;
+
+    // Use with Google Fonts package to use downloadable fonts
+    TextTheme textTheme = createTextTheme(context, "Poppins", "Poppins");
+
+    MaterialTheme theme = MaterialTheme(textTheme);
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      home: const LoginPage(),
+    );
   }
 }

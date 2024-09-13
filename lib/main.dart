@@ -13,7 +13,7 @@ void main() {
 
 
 
-
+ 
 // import 'package:aplicacao_base/app/pages/videoPreview/video_preview_page.dart';
 // import 'package:aplicacao_base/data/interfaces/api_repository.interface.dart';
 // import 'package:aplicacao_base/data/interfaces/client.interface.dart';

@@ -1,4 +1,6 @@
+import 'package:aplicacao_base/app/pages/locals_list/locals_list_page.dart';
 import 'package:aplicacao_base/app/pages/login/login_page.dart';
+import 'package:aplicacao_base/app/pages/videoPreview/test_page.dart';
 import '../../shared/themes/theme.dart';
 import '../../shared/themes/util.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: const LoginPage(),
+      home: const MyWidget(),
     );
   }
 }

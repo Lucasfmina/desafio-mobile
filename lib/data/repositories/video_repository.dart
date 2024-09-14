@@ -12,7 +12,7 @@ class VideoRepository implements IApiRepository {
   Future<List> getDataList(String? path) async {
     Response response = await client.get(path);
 
-    List<VideoModel> dataList = response.data['data']
+    List<VideoModel> dataList = (response.data['data'] as List<dynamic>)
         .map((dataElement) => VideoModel.fromMap(dataElement))
         .toList();
 

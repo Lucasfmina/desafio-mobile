@@ -78,9 +78,9 @@ class _MyWidgetState extends State<MyWidget> {
 }
 
 Widget customListView(
-    {required int itemCount, required List<VideoModel> itemList}) {
+    {required int itemPerPage, required List<VideoModel> itemList}) {
   return Expanded(
-    flex: itemCount,
+    flex: itemPerPage,
     child: ListView.separated(
         shrinkWrap: true,
         itemBuilder: ((context, index) {
@@ -90,7 +90,7 @@ Widget customListView(
           );
         }),
         separatorBuilder: (_, e) => const Divider(),
-        itemCount: itemCount),
+        itemCount: itemPerPage),
   );
 }
 
@@ -108,7 +108,7 @@ Widget backFowardButtons(
   void fowardPressed() {
     if (currentPage < pages) {
       currentPage++;
-      onPressFoward;
+      onPressFoward();
     }
   }
 

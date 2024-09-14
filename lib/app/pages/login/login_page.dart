@@ -1,4 +1,7 @@
+import 'package:aplicacao_base/app/pages/locals_list/locals_list_page.dart';
 import 'package:flutter/material.dart';
+
+final _formKey = GlobalKey<FormState>();
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,33 +44,41 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   Form(
+                    key: _formKey,
                     child: Column(
                       children: [
                         TextFormField(
-                          decoration: const InputDecoration(
-                              label: Text('e-mail'),
-                              border: OutlineInputBorder()),
-                          validator: (value) {
-                            return value;
-                          },
-                        ),
+                            decoration: const InputDecoration(
+                                label: Text('Usuário'),
+                                border: OutlineInputBorder()),
+                            validator: (usuario) => usuario != 'gabriel'
+                                ? 'Usuário não encontrado'
+                                : null),
                         const SizedBox(
                           height: 15,
                         ),
                         TextFormField(
-                          decoration: const InputDecoration(
-                              label: Text('senha'),
-                              border: OutlineInputBorder()),
-                          obscureText: true,
-                          validator: (value) {
-                            return value;
-                          },
-                        ),
+                            decoration: const InputDecoration(
+                                label: Text('senha'),
+                                border: OutlineInputBorder()),
+                            obscureText: true,
+                            validator: (password) => password != '140120'
+                                ? 'Senha incorreta/inválida'
+                                : null),
                         const SizedBox(
                           height: 40,
                         ),
                         ElevatedButton(
-                            onPressed: () {}, child: const Text("Entrar"))
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const MyWidget(),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text("Entrar"))
                       ],
                     ),
                   )

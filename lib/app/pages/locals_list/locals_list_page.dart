@@ -13,14 +13,14 @@ final Controller controller = Controller();
 
 int currentPage = 0;
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class LocalsListPage extends StatefulWidget {
+  const LocalsListPage({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<LocalsListPage> createState() => _LocalsListPageState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _LocalsListPageState extends State<LocalsListPage> {
   @override
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _MyWidgetState extends State<MyWidget> {
   }
 
   List<VideoModel> videoList = [];
-  int itemsPerPage = 8;
+  int itemsPerPage = 6;
   bool isLoaging = true;
 
   void requestPage() async {
@@ -73,7 +73,7 @@ class _MyWidgetState extends State<MyWidget> {
                 : Column(
                     children: [
                       customListView(
-                          itemPerPage: itemsPerPage, itemList: videoList),
+                          itemsPerPage: itemsPerPage, itemList: videoList),
                       backFowardButtons(
                           onPressBack: returnPage,
                           onPressFoward: requestPage,
@@ -86,9 +86,9 @@ class _MyWidgetState extends State<MyWidget> {
 }
 
 Widget customListView(
-    {required int itemPerPage, required List<VideoModel> itemList}) {
+    {required int itemsPerPage, required List<VideoModel> itemList}) {
   return Expanded(
-    flex: itemPerPage + 1,
+    flex: itemsPerPage + 1,
     child: ListView.separated(
         shrinkWrap: true,
         itemBuilder: ((context, index) {
@@ -114,7 +114,7 @@ Widget customListView(
           );
         }),
         separatorBuilder: (_, e) => const Divider(),
-        itemCount: itemPerPage),
+        itemCount: itemsPerPage),
   );
 }
 

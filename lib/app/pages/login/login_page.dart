@@ -73,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
                               if (_formKey.currentState!.validate()) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => const MyWidget(),
+                                    builder: (context) =>
+                                        const LocalsListPage(),
                                   ),
                                 );
                               }
@@ -88,8 +89,4 @@ class _LoginPageState extends State<LoginPage> {
           )),
     );
   }
-}
-
-void validateUser(String? userInput) {
-  print("ai que nao sei o que");
 }

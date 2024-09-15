@@ -4,7 +4,6 @@ import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
 
 Controller controller = Controller();
-VideoModel video = controller.pullVideo();
 
 class VideoPlayerPage extends StatefulWidget {
   const VideoPlayerPage({super.key});
@@ -15,6 +14,7 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   late CustomVideoPlayerController _customVideoController;
+  late VideoModel video;
 
   @override
   void initState() {
@@ -34,8 +34,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         child: Center(
           child: Column(
             children: [
-              Text(video.info.title),
-              Text(video.info.subtitle),
+              Text(video.location.name),
+              Text(video.location.address.address),
               CustomVideoPlayer(
                   customVideoPlayerController: _customVideoController),
             ],
@@ -45,7 +45,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     );
   }
 
+  @override
+  void dispose() {
+    _customVideoController.dispose();
+    super.dispose();
+  }
+
   void initializeVideoPlayer() {
+    video = controller.pullVideo();
     VideoPlayerController _videoController =
         VideoPlayerController.contentUri(Uri.parse(video.uri))
           ..initialize().then((value) {

@@ -1,3 +1,4 @@
+import 'package:aplicacao_base/app/pages/locals_list/locals_list_page.dart';
 import 'package:aplicacao_base/app/pages/login/login_page.dart';
 import '../../shared/themes/theme.dart';
 import '../../shared/themes/util.dart';
@@ -19,9 +20,9 @@ class MyApp extends StatelessWidget {
 
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Gabriel Desafio Mobile',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: const LoginPage(),
+      home: const LocalsListPage(),
     );
   }
 }

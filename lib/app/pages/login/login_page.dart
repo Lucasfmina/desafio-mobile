@@ -32,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     "Bem Vindo!",
                     style: Theme.of(context).textTheme.displayMedium,
+                    selectionColor: Theme.of(context).colorScheme.secondary,
                   ),
                   const SizedBox(
                     height: 20,
@@ -50,7 +51,9 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                             decoration: const InputDecoration(
                                 label: Text('Usuário'),
-                                border: OutlineInputBorder()),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)))),
                             validator: (usuario) => usuario != 'gabriel'
                                 ? 'Usuário não encontrado'
                                 : null),
@@ -60,7 +63,9 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                             decoration: const InputDecoration(
                                 label: Text('senha'),
-                                border: OutlineInputBorder()),
+                                border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)))),
                             obscureText: true,
                             validator: (password) => password != '140120'
                                 ? 'Senha incorreta/inválida'
@@ -79,7 +84,9 @@ class _LoginPageState extends State<LoginPage> {
                                 );
                               }
                             },
-                            child: const Text("Entrar"))
+                            child: const SizedBox(
+                                width: 90,
+                                child: Center(child: Text("Entrar"))))
                       ],
                     ),
                   )

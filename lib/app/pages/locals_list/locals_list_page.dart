@@ -10,8 +10,9 @@ import 'package:flutter/material.dart';
 final IClient client = DioHttpClient(url: "http://10.0.2.2:3001");
 final IApiRepository repository = VideoRepository(client: client);
 final Controller controller = Controller();
+List<VideoModel> buffer = [];
 
-int currentPage = 0;
+int currentPage = 1;
 
 class LocalsListPage extends StatefulWidget {
   const LocalsListPage({super.key});
@@ -24,33 +25,50 @@ class _LocalsListPageState extends State<LocalsListPage> {
   @override
   void initState() {
     super.initState();
-    requestPage();
+    initializePages(10);
   }
 
   List<VideoModel> videoList = [];
   int itemsPerPage = 6;
   bool isLoaging = true;
 
-  void requestPage() async {
-    currentPage++;
-    int items = currentPage * itemsPerPage;
-    List<VideoModel> buffer = await repository
-        .getDataList('/v1/videos/history?limit=$items') as List<VideoModel>;
+  void initializePages(int pages) async {
+    await requestPages(pages);
+    videoList = buffer.sublist(0, itemsPerPage);
+  }
+
+  Future<void> requestPages(int pages) async {
+    int items = pages * itemsPerPage;
+    buffer = await repository.getDataList('/v1/videos/history?limit=$items')
+        as List<VideoModel>;
     setState(() {
-      videoList = buffer.sublist(items - itemsPerPage);
       isLoaging = false;
     });
   }
 
-  void returnPage() async {
-    currentPage--;
-    int items = currentPage * itemsPerPage;
-    List<VideoModel> buffer = await repository
-        .getDataList('/v1/videos/history?limit=$items') as List<VideoModel>;
+  void backPressed() {
+    if (currentPage > 1) {
+      currentPage--;
+      setListToPage(currentPage);
+    }
+  }
+
+  void setListToPage(int page) {
     setState(() {
-      videoList = buffer.sublist(items - itemsPerPage);
-      isLoaging = false;
+      videoList =
+          buffer.sublist((page - 1) * itemsPerPage, (page * itemsPerPage) - 1);
     });
+  }
+
+  void fowardPressed() async {
+    if (((currentPage + 1) * itemsPerPage) > buffer.length) {
+      buffer = buffer +
+          (await repository
+                  .getDataList('/v1/videos/history?limit=${10 * itemsPerPage}')
+              as List<VideoModel>);
+    }
+    currentPage++;
+    setListToPage(currentPage);
   }
 
   @override
@@ -75,9 +93,16 @@ class _LocalsListPageState extends State<LocalsListPage> {
                       customListView(
                           itemsPerPage: itemsPerPage, itemList: videoList),
                       backFowardButtons(
-                          onPressBack: returnPage,
-                          onPressFoward: requestPage,
-                          pages: 100)
+                          list: videoList,
+                          fowardPress: fowardPressed,
+                          backPress: backPressed),
+                      Expanded(
+                          child: Text(
+                        '$currentPage',
+                        style: TextStyle(
+                            color: Color(0xff001f60),
+                            fontWeight: FontWeight.w700),
+                      ))
                     ],
                   ),
           )),
@@ -89,53 +114,45 @@ Widget customListView(
     {required int itemsPerPage, required List<VideoModel> itemList}) {
   return Expanded(
     flex: itemsPerPage + 1,
-    child: ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: ((context, index) {
-          return ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(itemList[index].location.name,
-                    style: const TextStyle(color: Color(0xff002aff))),
-                Text(itemList[index].location.address.address),
-              ],
-            ),
-            trailing: IconButton(
-                onPressed: () {
-                  controller.pushVideo(itemList[index]);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const VideoPlayerPage(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.chevron_right)),
-          );
-        }),
-        separatorBuilder: (_, e) => const Divider(),
-        itemCount: itemsPerPage),
+    child: Column(
+      children: [
+        ListView.separated(
+            shrinkWrap: true,
+            itemBuilder: ((context, index) {
+              return ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(itemList[index].location.name,
+                        style: const TextStyle(
+                            color: Color(0xff002aff),
+                            fontWeight: FontWeight.w700)),
+                    Text(itemList[index].location.address.address),
+                  ],
+                ),
+                trailing: IconButton(
+                    onPressed: () {
+                      controller.pushVideo(itemList[index]);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const VideoPlayerPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.chevron_right)),
+              );
+            }),
+            separatorBuilder: (_, e) => const Divider(),
+            itemCount: itemsPerPage - 1),
+      ],
+    ),
   );
 }
 
 Widget backFowardButtons(
-    {required Function() onPressBack,
-    required Function() onPressFoward,
-    required int pages}) {
-  void backPressed() {
-    if (currentPage > 1) {
-      currentPage--;
-      onPressBack();
-    }
-  }
-
-  void fowardPressed() {
-    if (currentPage < pages) {
-      currentPage++;
-      onPressFoward();
-    }
-  }
-
+    {required List<dynamic> list,
+    required Function() fowardPress,
+    required Function() backPress}) {
   return Expanded(
     flex: 2,
     child: Row(
@@ -143,12 +160,12 @@ Widget backFowardButtons(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ElevatedButton(
-            onPressed: backPressed, child: const Icon(Icons.arrow_back)),
+            onPressed: backPress, child: const Icon(Icons.arrow_back)),
         const SizedBox(
           width: 10,
         ),
         ElevatedButton(
-            onPressed: fowardPressed, child: const Icon(Icons.arrow_forward))
+            onPressed: fowardPress, child: const Icon(Icons.arrow_forward))
       ],
     ),
   );

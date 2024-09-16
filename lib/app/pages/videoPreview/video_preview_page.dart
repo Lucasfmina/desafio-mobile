@@ -15,6 +15,7 @@ class VideoPlayerPage extends StatefulWidget {
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   late CustomVideoPlayerController _customVideoController;
   late VideoModel video;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -26,7 +27,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Imagens"),
+        title: const Text(
+          "Imagens",
+          style:
+              TextStyle(color: Color(0xff001f60), fontWeight: FontWeight.w700),
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -34,10 +39,25 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         child: Center(
           child: Column(
             children: [
-              Text(video.location.name),
-              Text(video.location.address.address),
-              CustomVideoPlayer(
-                  customVideoPlayerController: _customVideoController),
+              Text(
+                video.location.name,
+                style: const TextStyle(
+                    color: Color(0xff001f60), fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                video.location.address.address,
+                style: const TextStyle(
+                    color: Color(0xff4fff95), fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 15),
+              isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    )
+                  : CustomVideoPlayer(
+                      customVideoPlayerController: _customVideoController)
             ],
           ),
         ),
@@ -53,12 +73,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   void initializeVideoPlayer() {
     video = controller.pullVideo();
-    VideoPlayerController _videoController =
+    VideoPlayerController videoController =
         VideoPlayerController.contentUri(Uri.parse(video.uri))
           ..initialize().then((value) {
-            setState(() {});
+            setState(() {
+              isLoading = false;
+            });
           });
     _customVideoController = CustomVideoPlayerController(
-        context: context, videoPlayerController: _videoController);
+        context: context, videoPlayerController: videoController);
   }
 }

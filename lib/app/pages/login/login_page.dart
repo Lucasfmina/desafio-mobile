@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   Image.asset(
-                    'assets/gabriel_icon.png',
+                    'assets/images/gabriel_icon.png',
                     width: 128,
                   ),
                   const SizedBox(
